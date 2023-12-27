@@ -1,0 +1,29 @@
+h1{
+    text-align: center;
+    margin: 3vh;   
+}
+
+body{
+    background-color: rgb(235, 223, 223);
+}
+
+.img-fluid{
+    border: 1px;
+    border-radius: 10px;
+}
+
+.btn.btn-primary.fa.fa-heart{
+    margin: 1vh;
+}
+
+
+.btn.btn-primary.fa.fa-star{
+    margin: 1vh;
+}
+
+
+.btn.btn-primary.fa.fa-trash{
+    margin: 1vh;
+}
+
+
