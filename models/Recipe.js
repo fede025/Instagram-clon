@@ -23,7 +23,7 @@ const RecipeSchema = new mongoose.Schema({
   },
   likes: {
     type: Number,
-    required: true,
+    default: 0  
   },
   isDeleted: {
     type: Boolean,
@@ -37,6 +37,11 @@ const RecipeSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  
+  likedBy: [{ 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User' 
+  }] 
 });
 
 //MongoDB Collection named here - will give lowercase plural of name 
