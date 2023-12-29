@@ -1,29 +1,27 @@
-h1{
+h1 {
     text-align: center;
-    margin: 3vh;   
+    margin: 3vh;
 }
 
-body{
+body {
     background-color: rgb(235, 223, 223);
 }
 
-.img-fluid{
-    border: 1px;
-    border-radius: 10px;
-}
-
-.btn.btn-primary.fa.fa-heart{
-    margin: 1vh;
-}
-
-
-.btn.btn-primary.fa.fa-star{
-    margin: 1vh;
+.img-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 3vh;
 }
 
 
-.btn.btn-primary.fa.fa-trash{
-    margin: 1vh;
+.btn.btn-primary.fa.fa-heart,
+.btn.btn-primary.favorite-button,
+.btn.btn-primary.fa.fa-trash {
+    width: 3vw;
+    height: 6vh;
+    font-size: 1.5vw;
+    margin: 1vw;
 }
-
 

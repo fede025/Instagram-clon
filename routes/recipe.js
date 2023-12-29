@@ -12,8 +12,9 @@ router.get("/:id", ensureAuth, recipesController.getRecipe);
 //Enables user to create post w/ cloudinary for media uploads
 router.post("/createRecipe", upload.single("file"), recipesController.createRecipe);
 
-//Enables user to favorite post. ///////////// need to add a toggleFavorite like the like.
-router.post("/favoriteRecipe/:id", recipesController.favoriteRecipe);
+
+//Enables user to favorite the post. If its pressed again, it removes the favorite.
+router.put("/toggleFavorite/:id", recipesController.toggleFavorite);
 
 
 //Enables user to like post. If its liked again, it removes the like.

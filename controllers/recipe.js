@@ -3,6 +3,7 @@ const Recipe = require("../models/Recipe");
 const Favorite = require("../models/Favorite");
 
 module.exports = {
+
   getProfile: async (req, res) => { 
     console.log(req.user)
     try {
@@ -16,6 +17,9 @@ module.exports = {
       console.log(err);
     }
   },
+
+
+
   getFavorites: async (req, res) => { 
     console.log(req.user)
     try {
@@ -32,29 +36,39 @@ module.exports = {
       console.log(err);
     }
   },
+
+
+
   getRecipe: async (req, res) => {
     try {
-      //id parameter comes from the post routes
-      //router.get("/:id", ensureAuth, postsController.getPost);
-      //http://localhost:2121/post/631a7f59a3e56acfc7da286f
-      //id === 631a7f59a3e56acfc7da286f
       const recipe = await Recipe.findById(req.params.id);
-      let heartIconClass = "far fa-heart"; // Initial heart icon class (void)
-      let likeTextContent = "Like"; // Initial like text content
-      
-    // Assuming this code is inside the getRecipe function of your recipesController
-    res.render("recipe.ejs",
-    {
-      recipe: recipe,
-      user: req.user,
-      heartIconClass: 'far fa-heart', // Initial heart icon class (void)
-      likeTextContent: 'Like' // Initial like text content
-    });
+  
 
+      if (!recipe) {
+        // Handle the case when the recipe is not found
+        return res.redirect("/feed");
+      }
+      
+      // Assuming req.user contains the current user's information
+      const userId = req.user.id;
+  
+      // Check if the current user has liked this recipe
+      const isLiked = recipe.likedBy.includes(userId);
+
+      // Check if the current user has favorited this recipe
+      const isFavorited = await Favorite.exists({ user: userId, recipe: req.params.id });
+  
+      res.render("recipe.ejs", {
+        recipe: recipe,
+        user: req.user,
+        isLiked: isLiked, // Pass the isLiked value to the template
+        isFavorited: isFavorited, // Pass the isFavorited value to the template
+      });
     } catch (err) {
       console.log(err);
     }
   },
+  
 
  
   createRecipe: async (req, res) => {
@@ -79,37 +93,6 @@ module.exports = {
     }
   },
  
-
-
-  ////////////// need to change this to toggleFavorite /////////////
-  favoriteRecipe: async (req, res) => {
-    try {
-      const userId = req.user.id; // Assuming you have user information stored in req.user
-
-      // Check if the user has already favorited the recipe
-      const existingFavorite = await Favorite.findOne({ user: userId, recipe: req.params.id });
-
-      if (!existingFavorite) {
-        // If the user hasn't already favorited the recipe, add it to favorites
-        await Favorite.create({
-          user: userId,
-          recipe: req.params.id,
-        });
-        console.log("Favorite has been added!");
-      } else {
-        console.log("Recipe is already in favorites");
-        // You can send a message or perform an action to inform the user that the recipe is already in their favorites
-      }
-
-      res.redirect(`/recipe/${req.params.id}`);
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Internal server error");
-    }
-  },
-
- 
-  
   
   
   deleteRecipe: async (req, res) => {
@@ -140,26 +123,6 @@ module.exports = {
   },
   
 
-  deleteFavorite: async (req, res) => {
-    try {
-      // Find favorite by id
-      let foundFavorite = await Favorite.findById(req.params.id);
-  
-      if (!foundFavorite) {
-        // If the favorite doesn't exist, handle the case accordingly
-        return res.redirect("/profile");
-      }
-  
-      // Delete favorite from db
-      await Favorite.deleteOne({ _id: req.params.id });
-      console.log("Deleted Favorite");
-  
-      res.redirect("/profile");
-    } catch (err) {
-      console.error(err);
-      res.redirect("/profile");
-    }
-  },
 
 
   getFeed: async (req, res) => {
@@ -170,6 +133,44 @@ module.exports = {
       console.log(err);
     }
   },
+
+
+
+  
+  toggleFavorite: async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const recipeId = req.params.id;
+  
+     // Check if the user has already favorited the recipe
+      const existingFavorite = await Favorite.findOne({ user: userId, recipe: recipeId });
+  
+      // If the recipe is already favorited, remove it from favorites
+      if (existingFavorite) {
+        await Favorite.deleteOne({ _id: existingFavorite._id });
+        console.log("Favorite has been removed!");
+      } else {
+        // If the recipe is not favorited, add it to favorites
+        await Favorite.create({
+          user: userId,
+          recipe: recipeId,
+        });
+        console.log("Favorite has been added!");
+      }
+  
+      res.redirect(`/recipe/${recipeId}`);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Internal server error");
+    }
+  },
+
+
+
+  
+  
+  
+
 
   toggleLike: async (req, res) => {
     try {
@@ -216,3 +217,7 @@ module.exports = {
     }
   },
 }
+
+
+
+/////////////////////////////////// when deleting a recipe, delete the favorites as well as the recipe.
