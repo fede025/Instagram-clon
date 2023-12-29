@@ -12,15 +12,16 @@ router.get("/:id", ensureAuth, recipesController.getRecipe);
 //Enables user to create post w/ cloudinary for media uploads
 router.post("/createRecipe", upload.single("file"), recipesController.createRecipe);
 
+//Enables user to favorite post. ///////////// need to add a toggleFavorite like the like.
 router.post("/favoriteRecipe/:id", recipesController.favoriteRecipe);
 
-//Enables user to like post. In controller, uses POST model to update likes by 1
-router.put("/likeRecipe/:id", recipesController.likeRecipe);
+
+//Enables user to like post. If its liked again, it removes the like.
+router.put("/toggleLike/:id", recipesController.toggleLike);
+
 
 //Enables user to delete post. In controller, uses POST model to delete post from MongoDB collection.
 router.delete("/deleteRecipe/:id", recipesController.deleteRecipe);
 
-// Not done yet, but should delete the favorite from the db.
-// router.delete("/deleteFavorite/:id", recipesController.deleteFavorite);
 
 module.exports = router;

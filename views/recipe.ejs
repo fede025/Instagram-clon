@@ -1,47 +1,68 @@
 <%- include('partials/header') -%>
+
 <div class="container">
   <div class="row justify-content-center mt-5">
     <div class="col-6">
       <h2><%= recipe.title %></h2>
       <img class="img-fluid" src="<%= recipe.image%>" />
       <div class="row justify-content-between">
-        <form
-          class="col-1"
-          action="/recipe/likeRecipe/<%= recipe.id %>?_method=PUT"
-          method="POST"
-        >
-          <button class="btn btn-primary fa fa-heart" type="submit"></button>
-        </form>
         
 
-        <!-- if recipe not liked, like
-        else, if recipe already liked, delete the like -->
+        <form
+          class="col-1"
+          action="/recipe/toggleLike/<%= recipe.id %>?_method=PUT"
+          method="POST"
+          id="likeForm"
+        >
+          <button id="likeButton" class="btn btn-primary fa fa-heart" type="button"></button>       
+        </form>
 
+        <script>
+          const likeButton = document.getElementById('likeButton');
 
+          if (likeButton) {
+            likeButton.addEventListener('click', async () => {
+              const response = await fetch('/recipe/toggleLike/<%= recipe.id %>?_method=PUT', {
+                method: 'POST',
+              });
+               if (response.ok) {
+                window.location.reload();
+              } else {
+                console.error('Failed to like/unlike the recipe');
+              }
+            });
+          }
+        </script>
+
+        <h3 id="likesCount" class="col-3">Likes: <%= recipe.likes %></h3>
+
+         
+        
         <form
           class="col-1"
           action="/recipe/favoriteRecipe/<%= recipe.id %>" method="POST"
         >
           <button class="btn btn-primary fa fa-star" type="submit"></button>
         </form>
-       
-        <h3 class="col-3">Likes: <%= recipe.likes %></h3>
-        <%if(recipe.user == user.id){ %>
-
         <!-- if recipe not faved, fav
         else, if recipe already faved, delete the fav -->
-               
+
+        <!-- NEED TO IMPLEMENT THIS -->
+
+       
         
+               
+        <%if(recipe.user == user.id){ %>
         <form
           action="/recipe/deleteRecipe/<%= recipe.id %>?_method=DELETE"
           method="POST"
           class="col-3"
         >
           <button class="btn btn-primary fa fa-trash" type="submit"></button>
-        </form>        
-         
-
+        </form>                
         <%}%>
+
+
       </div>
     </div>
 
@@ -58,7 +79,9 @@
       <a class="btn btn-primary" href="/profile">Return to Profile</a>
       <a class="btn btn-primary" href="/feed">Return to Feed</a>
     </div>
+    
   </div>
 </div>
+
 
 <%- include('partials/footer') -%>
