@@ -17,40 +17,15 @@
           class="col-1"
           action="/recipe/toggleLike/<%= recipe.id %>?_method=PUT"
           method="POST"
-          id="likeForm"
         >
           <!-- Button to like/unlike the recipe -->
-          <button id="likeButton" class="btn btn-primary favorite-button" type="submit">
+          <button class="btn btn-primary favorite-button" type="submit">
             <i class="<% if (isLiked) { %>fas fa-heart<% } else { %>far fa-heart<% } %>"></i>
           </button>
-
         </form>
 
-
-
-
-
-        <!-- Script to handle liking/unliking a recipe -->
-        <script>
-          const likeButton = document.getElementById('likeButton');
-        
-          if (likeButton) {
-            likeButton.addEventListener('click', async () => {
-              const response = await fetch('/recipe/toggleLike/<%= recipe.id %>?_method=PUT', {
-                method: 'POST',
-              });
-              if (response.ok) {
-                // Reload the page to reflect the updated like status
-                window.location.reload();
-              } else {
-                console.error('Failed to like/unlike the recipe');
-              }
-            });
-          }
-        </script>
-
         <!-- Display the number of likes for the recipe -->
-        <h3 id="likesCount" class="col-3">Likes: <%= recipe.likes %></h3>
+        <h3 class="col-3">Likes: <%= recipe.likes %></h3>
 
 
 

@@ -173,10 +173,12 @@ module.exports = {
 
 
   toggleLike: async (req, res) => {
+    console.log("toggleLike route hit");
     try {
-      const userId = req.user._id; // Assuming you have user information stored in req.user
-            
+      const userId = req.user.id;
+      console.log("User ID:", userId);
       const recipe = await Recipe.findById(req.params.id);
+      console.log("Recipe found:", recipe ? "yes" : "no");
 
       if (!recipe) {
         console.log("Recipe not found");
@@ -201,7 +203,7 @@ module.exports = {
         await Recipe.findByIdAndUpdate(
           req.params.id,
           {
-            $push: { likedBy: userId },
+            $addToSet: { likedBy: userId }, // Use $addToSet instead of $push to prevent duplicates
             $inc: { likes: 1 },
           },
           { new: true }
@@ -209,10 +211,10 @@ module.exports = {
         console.log("Recipe liked");
       }
 
+      console.log("Redirecting to:", `/recipe/${req.params.id}`);
       res.redirect(`/recipe/${req.params.id}`);
-    
     } catch (err) {
-      console.error(err);
+      console.error("Error in toggleLike:", err);
       res.status(500).send("Internal server error");
     }
   },

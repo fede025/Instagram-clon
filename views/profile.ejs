@@ -1,14 +1,28 @@
 <%- include('partials/header') -%>
 <div class="container">
+  <div class="row mt-1">
+
+    <div class="col-9">
+      <!-- Empty column for spacing -->
+    </div> 
+
+    <div class="col-3 text-end">
+      <p class="mb-0"><strong>User Name</strong>: <%= user.userName %></p>
+      <!-- <p class="mb-1"><strong>Email</strong>: <%= user.email %></p> -->
+      <a href="/logout" class="btn btn-primary btn-sm">Logout</a>
+    </div>
+  </div>
+
   <div class="row mt-5">
-      <div class="col-6">
-          <div>
+      <div class="col-5">
+          <!-- <div>
               <p><strong>User Name</strong>: <%= user.userName %></p>
               <p><strong>Email</strong>: <%= user.email %></p>
               <a href="/logout" class="col-3 btn btn-primary">Logout</a>
           </div>
+           -->
           <div class="mt-5">
-            <h2>Add a post</h2>
+            <h2 class="h2-profile">Add a post</h2>
             <form action="/recipe/createRecipe" enctype="multipart/form-data" method="POST">
               <div class="mb-3">
                   <label for="name" class="form-label">Name</label>
@@ -30,27 +44,35 @@
             </form>
           </div>
       </div>
-      <div class="col-6">
+
+
+      <div class="col-2">
+          <!-- Empty column for spacing -->
+      </div>
+
+
+      
+      <div class="col-5">
         <ul class="row list-unstyled">
         <% for(var i=0; i<recipes.length; i++) {%>
+
           <li class="col-6 justify-content-between mt-5">
             <a href="/recipe/<%= recipes[i]._id%>">
               <h2><%= recipes[i].name%></h2>
               <img class="img-fluid" src="<%= recipes[i].image%>">
-              <p><%= recipes[i].ingredients%></p>
-              <p><%= recipes[i].directions%></p>
             </a>
+
+            <p><%= recipes[i].ingredients%></p>
+            <p><%= recipes[i].directions%></p>
+            
           </li>
         <% } %>
         </ul>
 
         <div class="row justify-content-center mt-5">
-          <a class="btn btn-primary" href="/feed">Return to Feed</a>
+          <a class="btn btn-favorites me-3" href="/feed">Return to Feed</a>
+          <a class="btn btn-favorites ms-3" href="/favorites">Favorite Posts</a>
         </div>  
-
-        <div class="row justify-content-center mt-5">
-          <a class="btn btn-primary" href="/favorites">Favorites Posts</a>
-        </div> 
 
       </div>  
     </div>
