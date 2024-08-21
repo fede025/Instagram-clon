@@ -10,22 +10,58 @@
       <div class="row justify-content-between">
         
 
-        
-
         <!-- Form to toggle liking a recipe -->
         <form
           class="col-1"
           action="/recipe/toggleLike/<%= recipe.id %>?_method=PUT"
           method="POST"
+          id="likeForm"
         >
           <!-- Button to like/unlike the recipe -->
-          <button class="btn btn-primary favorite-button" type="submit">
+          <button id="likeButton" class="btn btn-primary favorite-button" type="submit">
             <i class="<% if (isLiked) { %>fas fa-heart<% } else { %>far fa-heart<% } %>"></i>
           </button>
         </form>
 
+        <!-- Script to handle liking/unliking a recipe -->
+        <script>
+          const likeForm = document.getElementById('likeForm');
+          const likeButton = document.getElementById('likeButton');
+
+          if (likeForm && likeButton) {
+            likeForm.addEventListener('submit', async (e) => {
+              e.preventDefault();
+              
+              try {
+                const response = await fetch(likeForm.action, {
+                  method: 'POST',
+                });
+                
+                if (response.ok) {
+                  // Manually update the UI
+                  const heartIcon = likeButton.querySelector('i');
+                  heartIcon.classList.toggle('fas');
+                  heartIcon.classList.toggle('far');
+                  
+                  // Update likes count
+                  const likesCount = document.getElementById('likesCount');
+                  if (likesCount) {
+                    const currentLikes = parseInt(likesCount.textContent.split(':')[1].trim());
+                    const newLikes = heartIcon.classList.contains('fas') ? currentLikes + 1 : currentLikes - 1;
+                    likesCount.textContent = `Likes: ${newLikes}`;
+                  }
+                } else {
+                  console.error('Failed to like/unlike the recipe');
+                }
+              } catch (error) {
+                console.error('Error:', error);
+              }
+            });
+          }
+        </script>
+
         <!-- Display the number of likes for the recipe -->
-        <h3 class="col-3">Likes: <%= recipe.likes %></h3>
+        <h3 id="likesCount" class="col-3">Likes: <%= recipe.likes %></h3>
 
 
 
